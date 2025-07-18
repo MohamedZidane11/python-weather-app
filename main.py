@@ -1,3 +1,4 @@
+from pydoc import describe
 from re import search
 from tkinter import *
 import tkinter as tk
@@ -12,6 +13,7 @@ from funcs import *
 
 # ===== App Functions =====
 def getWeather():
+    #==== Getting City Info ====
     city = searchField.get()
     geoLocator = Nominatim(user_agent="geoapiExercices")
     location = geoLocator.geocode(city)
@@ -24,7 +26,23 @@ def getWeather():
     name.config(text="Current Weather")
     clock.config(text=current_time)
 
+    #==== Getting Weather Info ====
+    API_key = "646824f2b7b86caffec1d0b16ea77f79"
+    api = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_key}"
+    jason_data = requests.get(api).json()
+    condition = jason_data['weather'][0]['main']
+    description = jason_data['weather'][0]['description']
+    temp = int(jason_data['main']['temp'] - 273.15)
+    wind = jason_data['wind']['speed']
+    humidity = jason_data['main']['humidity']
+    pressure = jason_data['main']['pressure']
 
+    t.config(text=f"{temp}°")
+    c.config(text=f"{condition} | Feels like {temp}°")
+    w.config(text=f"{wind}km/h")
+    h.config(text=f"{humidity}%")
+    d.config(text=f"{description}")
+    p.config(text=f"{pressure}hPa")
 
 # ===== App Main Frame =====
 root = Tk()
@@ -67,10 +85,10 @@ clock.place(x=30, y=130)
 
 
 # ===== Weather Info =====
-time = Label(root, font=("arial", 70, "bold"), text="Time", fg="#ee666d")
-time.place(x=400, y=150)
-cls = Label(root, font=("arial", 15, "bold"), text="cls")
-cls.place(x=400, y=250)
+t = Label(root, font=("arial", 70, "bold"), text="Temp", fg="#ee666d")
+t.place(x=400, y=150)
+c = Label(root, font=("arial", 15, "bold"), text="Conditions")
+c.place(x=400, y=250)
 
 
 # ===== Weather Details =====
@@ -96,7 +114,7 @@ d = Label(root, text="...", font=("arial", 20, "bold"), bg="#1ab5ef")
 d.place(x=450, y=430)
 
 p = Label(root, text="...", font=("arial", 20, "bold"), bg="#1ab5ef")
-p.place(x=670, y=430)
+p.place(x=640, y=430)
 
 
 
