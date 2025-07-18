@@ -1,5 +1,5 @@
 from pydoc import describe
-from re import search
+from re import search, error
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -13,36 +13,39 @@ from funcs import *
 
 # ===== App Functions =====
 def getWeather():
-    #==== Getting City Info ====
-    city = searchField.get()
-    geoLocator = Nominatim(user_agent="geoapiExercices")
-    location = geoLocator.geocode(city)
-    obj = TimezoneFinder()
-    result = obj.timezone_at(lng=location.longitude, lat=location.latitude)
+    try:
+        #==== Getting City Info ====
+        city = searchField.get()
+        geoLocator = Nominatim(user_agent="geoapiExercices")
+        location = geoLocator.geocode(city)
+        obj = TimezoneFinder()
+        result = obj.timezone_at(lng=location.longitude, lat=location.latitude)
 
-    home = pytz.timezone(result)
-    local_time = datetime.now(home)
-    current_time = local_time.strftime("%I:%M %p")
-    name.config(text="Current Weather")
-    clock.config(text=current_time)
+        home = pytz.timezone(result)
+        local_time = datetime.now(home)
+        current_time = local_time.strftime("%I:%M %p")
+        name.config(text="Current Weather")
+        clock.config(text=current_time)
 
-    #==== Getting Weather Info ====
-    API_key = "646824f2b7b86caffec1d0b16ea77f79"
-    api = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_key}"
-    jason_data = requests.get(api).json()
-    condition = jason_data['weather'][0]['main']
-    description = jason_data['weather'][0]['description']
-    temp = int(jason_data['main']['temp'] - 273.15)
-    wind = jason_data['wind']['speed']
-    humidity = jason_data['main']['humidity']
-    pressure = jason_data['main']['pressure']
+        #==== Getting Weather Info ====
+        API_key = "646824f2b7b86caffec1d0b16ea77f79"
+        api = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_key}"
+        jason_data = requests.get(api).json()
+        condition = jason_data['weather'][0]['main']
+        description = jason_data['weather'][0]['description']
+        temp = int(jason_data['main']['temp'] - 273.15)
+        wind = jason_data['wind']['speed']
+        humidity = jason_data['main']['humidity']
+        pressure = jason_data['main']['pressure']
 
-    t.config(text=f"{temp}°")
-    c.config(text=f"{condition} | Feels like {temp}°")
-    w.config(text=f"{wind}km/h")
-    h.config(text=f"{humidity}%")
-    d.config(text=f"{description}")
-    p.config(text=f"{pressure}hPa")
+        t.config(text=f"{temp}°")
+        c.config(text=f"{condition} | Feels like {temp}°")
+        w.config(text=f"{wind}")
+        h.config(text=f"{humidity}%")
+        d.config(text=f"{description}")
+        p.config(text=f"{pressure}")
+    except Exception as error:
+        messagebox.showerror("Weather App", "Invalid Entry")
 
 # ===== App Main Frame =====
 root = Tk()
@@ -114,7 +117,7 @@ d = Label(root, text="...", font=("arial", 20, "bold"), bg="#1ab5ef")
 d.place(x=450, y=430)
 
 p = Label(root, text="...", font=("arial", 20, "bold"), bg="#1ab5ef")
-p.place(x=640, y=430)
+p.place(x=670, y=430)
 
 
 
