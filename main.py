@@ -1,5 +1,3 @@
-from pydoc import describe
-from re import search, error
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -8,7 +6,6 @@ from timezonefinder import TimezoneFinder
 from datetime import datetime, timezone
 import requests
 import pytz
-from funcs import *
 
 
 # ===== App Functions =====
@@ -28,7 +25,7 @@ def getWeather():
         clock.config(text=current_time)
 
         #==== Getting Weather Info ====
-        API_key = "646824f2b7b86caffec1d0b16ea77f79"
+        API_key = "Key"
         api = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_key}"
         jason_data = requests.get(api).json()
         condition = jason_data['weather'][0]['main']
@@ -49,7 +46,7 @@ def getWeather():
 
 # ===== App Main Frame =====
 root = Tk()
-root.title("Weather App")
+root.title("Weather App Ver1.0")
 root.geometry("900x500+300+200")
 root.resizable(False, False)
 
